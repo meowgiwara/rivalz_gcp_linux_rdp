@@ -138,9 +138,9 @@ history -c
 # Print the message important note
 echo -e "
 #################################################\n\
-# ✅ Installation complete.\n\
+# Installation complete.\n\
 #################################################\n\
-Components installed and started:\n\
+Components installed and/or started:\n\
 - XFCE Desktop\n\
 - xrdp\n\
 - Rivalz.ai rClient\n\
