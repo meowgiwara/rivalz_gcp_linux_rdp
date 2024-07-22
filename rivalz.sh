@@ -138,7 +138,7 @@ history -c
 # Print the message important note
 echo -e "
 #################################################\n\
-# Installation complete.\n\
+# ✅ Installation complete.\n\
 #################################################\n\
 Components installed and started:\n\
 - XFCE Desktop\n\
