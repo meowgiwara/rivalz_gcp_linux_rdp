@@ -16,6 +16,36 @@ fi
 NEW_USER=$1
 NEW_PASSWORD=$2
 
+# Check if the user already exists
+if id "$NEW_USER" &>/dev/null; then
+  echo "User $NEW_USER already exists."
+  read -p "Do you want to continue with this user? (y/n): " choice
+  if [[ "$choice" != "y" && "$choice" != "Y" ]]; then
+    echo "Exiting script."
+    exit 0
+  fi
+else
+  # User Creation
+  echo "Creating new user..."
+  useradd -m -s /bin/bash $NEW_USER
+  if [ $? -ne 0 ]; then
+    echo "Failed to add new user."
+    exit 1
+  fi
+
+  echo "$NEW_USER:$NEW_PASSWORD" | chpasswd
+  if [ $? -ne 0 ]; then
+    echo "Failed to set password for new user."
+    exit 1
+  fi
+
+  usermod -aG sudo $NEW_USER
+  if [ $? -ne 0 ]; then
+    echo "Failed to add user to sudo group."
+    exit 1
+  fi
+fi
+
 # Update the package list and upgrade all your packages to their latest versions.
 echo "Updating package list and upgrading packages..."
 apt update && apt upgrade -y
@@ -29,26 +59,6 @@ echo "Installing necessary packages..."
 apt install -y xfce4 xfce4-goodies xrdp net-tools wget ethtool flatpak
 if [ $? -ne 0 ]; then
   echo "Failed to install necessary packages."
-  exit 1
-fi
-
-# User Creation
-echo "Creating new user..."
-useradd -m -s /bin/bash $NEW_USER
-if [ $? -ne 0 ]; then
-  echo "Failed to add new user."
-  exit 1
-fi
-
-echo "$NEW_USER:$NEW_PASSWORD" | chpasswd
-if [ $? -ne 0 ]; then
-  echo "Failed to set password for new user."
-  exit 1
-fi
-
-usermod -aG sudo $NEW_USER
-if [ $? -ne 0 ]; then
-  echo "Failed to add user to sudo group."
   exit 1
 fi
 
@@ -128,7 +138,7 @@ history -c
 # Print the message important note
 echo -e "
 #################################################\n\
-# Installation complete.
+# Installation complete.\n\
 #################################################\n\
 Components installed and started:\n\
 - XFCE Desktop\n\
