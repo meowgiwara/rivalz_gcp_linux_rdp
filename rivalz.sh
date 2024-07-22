@@ -12,9 +12,6 @@ if [ $# -ne 2 ]; then
     exit 1
 fi
 
-# Set debconf to non-interactive mode
-export DEBIAN_FRONTEND=noninteractive
-
 # Define user and password variables from script parameters
 NEW_USER=$1
 NEW_PASSWORD=$2
